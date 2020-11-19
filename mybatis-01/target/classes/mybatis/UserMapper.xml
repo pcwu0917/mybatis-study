@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wpc.dao.UserMapper">
+
+    <select id="getUserList" resultType="com.wpc.entity.User">
+        select * from user
+    </select>
+
+    <select id="getUserById" resultType="com.wpc.entity.User" parameterType="java.lang.Integer">
+        select * from user where id=#{userId};
+    </select>
+
+    <insert id="addUserByMap">
+        insert into user (id, name, pwd) values (#{id},#{usernmae},#{password});
+    </insert>
+</mapper>
