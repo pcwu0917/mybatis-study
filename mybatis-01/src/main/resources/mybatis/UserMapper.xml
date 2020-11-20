@@ -8,10 +8,6 @@
         select * from user
     </select>
 
-    <select id="getUserById" resultType="com.wpc.entity.User" parameterType="java.lang.Integer">
-        select * from user where id=#{userId};
-    </select>
-
     <insert id="addUserByMap">
         insert into user (id, name, pwd) values (#{id},#{usernmae},#{password});
     </insert>
