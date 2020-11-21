@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wpc.dao.ClassMapper">
+
+    <!--    一、通过外键查询所有的学生-->
+    <select id="getStudentByClassId" resultType="student">
+        select *
+        from student
+        where class_id = #{classId}
+    </select>
+
+    <!--    二、联表查询，结果为一个List，即每一个条记录都包含一个Class和一个student-->
+    <select id="getClassInfo" resultMap="classDtoMap">
+        select clazz.*,
+               s.id   as sId,
+               s.name as sName
+        from clazz
+                 join student s on clazz.id = s.class_id
+        where clazz.id = #{id}
+    </select>
+
+    <!--    1、定义clazz和数据库表的的映射-->
+    <resultMap id="clazzMap" type="clazz">
+        <result property="id" column="id"></result>
+        <result property="name" column="name"></result>
+    </resultMap>
+    <!--    2、定义student和数据库表的的映射,property代表JavaBean的属性名，column代表SQL中的别名-->
+    <resultMap id="studentMap" type="student">
+        <result property="id" column="sId"></result>
+        <result property="name" column="sName"></result>
+    </resultMap>
+
+    <!--    3、联表查询，并进行属性和列关系的映射-->
+    <!--    4、自动映射级别为PARTIAL，表示result对除在内部定义了嵌套结果映射（也就是连接的属性）以外的属性进行映射
+               即：DTO内部封装的对象无法事项自动映射，需要手动编写resultMap，这样也为了防止不同的表中含有相同的列，赋值错误的问题，如相同id
+               总结：为了防止后期的数据错误，建议autoMapping使用默认的PARTIAL级别，联表查询时，针对不同的entity手动编写result映射关系
+    -->
+    <resultMap id="classDtoMap" type="com.wpc.dto.ClassDTO">
+        <association property="clazz" resultMap="clazzMap"></association>
+        <association property="students" resultMap="studentMap"></association>
+    </resultMap>
+
+    <!--    三、联表查询：若将父表的对象的各属性提出通过外键查询到其他List<javaBean>并返回-->
+    <select id="getClassInfo2" resultMap="classDtoMap2">
+        select clazz.*,
+               s.id   as sId,
+               s.name as sName
+        from clazz
+                 join student s on clazz.id = s.class_id
+        where clazz.id = #{id}
+    </select>
+
+    <resultMap id="classDtoMap2" type="classDTO2">
+        <result property="id" column="id"></result>
+        <result property="name" column="name"></result>
+        <association property="students" resultMap="studentMap"></association>
+    </resultMap>
+
+
+</mapper>

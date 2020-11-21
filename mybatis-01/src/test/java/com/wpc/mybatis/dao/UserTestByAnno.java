@@ -44,6 +44,8 @@ public class UserTestByAnno {
 
     @Test
     public void testGetAllUser(){
+        SqlSession session=MybatisUtils.getOpenSession();
+        UserMapper mapper = session.getMapper(UserMapper.class);
         List<User> allUser = mapper.getAllUser();
         System.out.println(allUser);
     }

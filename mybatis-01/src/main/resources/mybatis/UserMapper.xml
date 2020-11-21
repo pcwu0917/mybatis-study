@@ -4,11 +4,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wpc.dao.UserMapper">
 
-    <select id="getUserList" resultType="com.wpc.entity.User">
-        select * from user
+    <!--    select的字段-->
+    <!--        1、id:需要和dao中的接口方法名一致-->
+    <!--        2、parameterType:若为基本类型，不需要填写，因为mybatis会使用TypeHandler自动转化-->
+    <!--        3、resultType/resultMap:返回值类型，若配置的有别名，这可以在此填写别名-->
+    <select id="selectUser" resultType="hashmap">
+        select *
+        from user
+        where id = #{id}
     </select>
 
-    <insert id="addUserByMap">
-        insert into user (id, name, pwd) values (#{id},#{usernmae},#{password});
+
+    <!--    insert/update/delete字段-->
+    <!--        1、id-->
+    <!--        2、parameterType-->
+    <!--        3、useGeneratedKeys：取出由数据库内部生成的主键(适用于insert/upddate)默认false，使用时：useGeneratedKeys=true,-->
+    <!--        4、keyProperty：指定主键属性（适用于insert/update）默认(unset),使用时；keyProperty="id"-->
+    <!--        5、若使用自动插入id，则可以通过user.getId()获取到插入数据时自动生成的id，若不设置时user.getId()为Null-->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user (name, pwd)
+        values (#{name}, #{pwd});
+    </insert>
+    <delete id="deleteUserById">
+        delete
+        from user
+        where id = #{userId}
+    </delete>
+    <update id="updateUserInfo" parameterType="user">
+        update user
+        set name=#{name},
+            pwd=#{pwd}
+        where id = #{id}
+    </update>
+
+
+    <!--    insert批量插入集合-->
+    <!--    insert返回值为int，用来 表示插入成功数-->
+    <insert id="batInsertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user (name, pwd)values
+        <foreach item="user" collection="list" separator=",">
+            (#{user.name},#{user.pwd})
+        </foreach>
     </insert>
 </mapper>
