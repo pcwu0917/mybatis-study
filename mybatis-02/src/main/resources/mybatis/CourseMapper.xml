@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wpc.dao.CourseMapper">
+
+    <!--    测试多对一-->
+    <select id="getAll" resultMap="courseMap">
+        select course.*,t.name tName,t.id tId
+        from course
+                 join teacher t on t.id = course.tid;
+    </select>
+    <resultMap id="courseMap" type="course">
+        <result property="id" column="cId"></result>
+        <result property="name" column="cName"></result>
+        <association property="teacher" javaType="teacher" resultMap="teacherMap"></association>
+    </resultMap>
+    <resultMap id="teacherMap" type="teacher">
+        <result property="id" column="tId"/>
+        <result property="name" column="tName"></result>
+    </resultMap>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wpc.dao.TeacherMapper">
+
+    <!--    测试一对多-->
+    <select id="getAllTeacher" resultMap="teacherMap">
+        select teacher.id tId, teacher.name as tName, c.id cId, c.name cName
+        from teacher
+                 join course c on teacher.id = c.tid;
+    </select>
+
+    <resultMap id="teacherMap" type="teacher">
+        <result property="id" column="tId"/>
+        <result property="name" column="tName"/>
+        <collection property="coursesList" ofType="course" resultMap="com.wpc.dao.CourseMapper.courseMap"></collection>
+    </resultMap>
+</mapper>
